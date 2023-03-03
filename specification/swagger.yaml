@@ -1,0 +1,531 @@
+openapi: 3.0.0
+info:
+  title: NewtNet REST
+  version: 1.0.0
+  description: REST API for NewtNet
+
+servers:
+  - url: http://localhost:80/api/v1
+
+tags:
+  - name: User
+    description: Everything about Users
+  - name: Newt
+    description: Everything about Specfic Posts
+  - name: Features
+    description: Everything that provides Features
+
+paths:
+  /login:
+    get:
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                  example: nils.ramstoeck@nasram.net
+                password:
+                  type: string
+                  example: password123
+      responses:
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: 200
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+  /register:
+    post:
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/User'
+                - type: object
+                  properties:
+                    password:
+                      type: string
+                      example: password123
+      responses:
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409' 
+        '201':
+          $ref: '#/components/responses/201'        
+
+  /@{handle}:
+    get:
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/handle'
+        - $ref: '#/components/parameters/token'
+      responses:
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      status:
+                        type: integer
+                        example: 200
+                  - type: object
+                    properties:
+                      user:
+                        $ref: '#/components/schemas/User'
+
+    post:
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/handle'
+      requestBody:
+        description: An Email is needed to create a new User
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                  example: nils.ramstoeck@nasram.net
+      responses:
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '201':
+          $ref: '#/components/responses/201'
+
+    put:
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/handle'
+        - $ref: '#/components/parameters/token'
+      requestBody:
+        description: Modifiable values of a User
+        content:
+          application/json:
+            schema: 
+              allOf:
+                - $ref: '#/components/schemas/UserModifiableProperties'
+                - $ref: '#/components/schemas/UserPersonalInfo'
+                - type: object
+                  properties:
+                    password:
+                      type: string
+                      example: password123
+      responses:
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      status:
+                        type: integer
+                        example: 200
+                  - type: object
+                    properties:
+                      user:
+                        $ref: '#/components/schemas/User'
+
+    delete:
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/handle'
+        - $ref: '#/components/parameters/token'
+      responses:
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '204':
+          $ref: '#/components/responses/204'
+
+  /@{handle}/{slug}:
+    get:
+      tags:
+        - Newt
+      parameters:
+        - $ref: '#/components/parameters/handle'
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/slug'
+      responses:
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '200':
+          description: Operation successful
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      status:
+                        type: integer
+                        example: 200
+                  - type: object
+                    properties:
+                      newt:
+                        $ref: '#/components/schemas/Newt'
+
+    put:
+      tags:
+        - Newt
+      parameters:
+        - $ref: '#/components/parameters/handle'
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/slug'
+      responses:
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+
+    delete:
+      tags:
+        - Newt
+      parameters:
+        - $ref: '#/components/parameters/handle'
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/slug'
+      responses:
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+
+  /newt:
+    post:
+      tags:
+        - Newt
+      parameters:
+        - $ref: '#/components/parameters/token'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                responseTo:
+                  type: string
+                  nullable: true
+                  example:
+                content:
+                  type: string
+                  example: This is the very first Newt!!!
+
+      responses:
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+
+  /@{handle}/{slug}/like:
+
+    post:
+      tags:
+        - Newt
+      parameters:
+        - $ref: '#/components/parameters/handle'
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/slug'
+      responses:
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '201':
+          $ref: '#/components/responses/201'
+
+    delete:
+      tags:
+        - Features
+      parameters:
+        - $ref: '#/components/parameters/handle'
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/slug'
+      responses:
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '204':
+          $ref: '#/components/responses/204'
+
+components:
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                type: integer
+                example: 400
+              error:
+                type: string
+                example: Bad Request
+
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                type: integer
+                example: 401
+              error:
+                type: string
+                example: Unauthorized
+
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                type: integer
+                example: 403
+              error:
+                type: string
+                example: Forbidden
+
+    '404':
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                type: integer
+                example: 404
+              error:
+                type: string
+                example: Resource not found
+
+    '409':
+      description: Duplicate Record
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                type: integer
+                example: 409
+              error:
+                type: string
+                example: Duplicate Record
+
+    '204':
+      description: Operation successful
+
+    '201':
+      description: Resource created successfully
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                type: integer
+                example: 201
+              message:
+                type: string
+                example: Resource Created
+
+  parameters:
+    handle:
+      name: handle
+      in: path
+      description: Handle of a User
+      required: true
+      example: nasram
+      schema:
+        type: string
+
+    token:
+      name: Authorization
+      in: header
+      description: Auth token
+      required: true
+      schema:
+        type: string
+
+    slug:
+      name: slug
+      in: path
+      description: Slug of a Newt
+      required: true
+      schema:
+        type: string
+
+  schemas:
+
+    NewtFixedProperties:
+      properties:
+        author:
+            $ref: '#/components/schemas/UserPrivate'
+        timestamp:
+          type: string
+          format: datetime
+        slug:
+          type: string
+          example: d550f813-c903-4a4e-a4e2-7f50535f6df4
+   
+    NewtModifiableProperties:
+      properties:
+        content:
+          type: string
+          example: This is the very first Newt!!!
+        likes: 
+          type: integer
+          example: 420
+
+    Newt:
+      allOf:
+        - $ref: '#/components/schemas/NewtFixedProperties'
+        - $ref: '#/components/schemas/NewtModifiableProperties'
+
+    # CommentFixedProperties:
+    #   properties:
+    #     author:
+    #       $ref: '#/components/schemas/User'
+    #     timestamp:
+    #       type: string
+    #       format: datetime
+    #     slug:
+    #       type: string
+    #       example: b4fc18f4-a12c-4fd4-b7d4-33d2be7c3d3e
+
+    # CommentModifiableProperties:
+    #   properties:
+    #     content:
+    #       type: string
+    #       example: This is great Insight!
+
+    # Comment:
+    #   allOf:
+    #     - $ref: '#/components/schemas/CommentFixedProperties'
+    #     - $ref: '#/components/schemas/CommentModifiableProperties'
+
+    UserFixedProperties:
+      properties:
+        handle:
+          type: string
+          example: nasram
+
+    UserModifiableProperties:
+      properties:
+        screenname:
+          type: string
+          example: Nasram (Nils Ramstöck)
+
+    UserPersonalInfo:
+      properties:
+        email:
+          type: string
+          example: nils.ramstoeck@nasram.com
+
+    UserPrivate:
+      allOf:
+        - $ref: '#/components/schemas/UserFixedProperties'
+        - $ref: '#/components/schemas/UserModifiableProperties'
+
+    User:
+      allOf:
+        - $ref: '#/components/schemas/UserPrivate'
+        - $ref: '#/components/schemas/UserPersonalInfo'

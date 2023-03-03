@@ -1,0 +1,10 @@
+header:
+  alg: HS265
+  typ: jwt
+
+body:
+  sub: ref(User.email)
+  name: ref(User.screenname)
+  iat: integer
+  ttl: integer
+  

@@ -1,0 +1,47 @@
+database: newtnet
+
+collections:
+
+  User:
+    handle:
+      type: String
+      unique: true
+      required: true
+    screenname:
+      type: String
+      required: true
+    email:
+      type: String
+      required: true
+    password:
+      type: String
+      required: true
+
+  Newt:
+    author:
+      type: User
+      ref: true
+      required: true
+    timestamp:
+      type: String
+      format: datetime
+      required: true
+    slug:
+      type: String
+      unique: true
+      required: true
+    responseTo:
+      type: Newt
+      ref: true
+    likes: 
+      type: Number
+      default: 0
+      required: true
+    reported:
+      type: Boolean
+      default: false
+      required: true
+    content:
+      type: String
+      required: true
+

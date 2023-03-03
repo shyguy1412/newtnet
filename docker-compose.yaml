@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  nextjs:
+    build: .
+    ports:
+      - "80:3000"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/my-database
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=my-database
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+volumes:
+  mongodb-data:

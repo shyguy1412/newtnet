@@ -5,18 +5,29 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:mongo": "node ./generateMongooseSchema.js",
+    "build:api": "openapi-generator-cli generate -g typescript-fetch -i specification/swagger.yaml -o src/lib/api_client",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "npm run build:mongo && npm run build:api",
+    "prebuild": "npm run build:mongo && npm run build:api"
   },
   "dependencies": {
     "@types/node": "18.14.4",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
+    "dotenv": "^16.0.3",
     "eslint": "8.35.0",
     "eslint-config-next": "13.2.3",
+    "mongoose": "^7.0.0",
     "next": "13.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "typescript": "4.9.5"
+    "react-spinners": "^0.13.8",
+    "typescript": "4.9.5",
+    "yaml": "^2.2.1"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.5.2"
   }
 }
