@@ -19,10 +19,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   connectToDatabase();
   const method = req.method ?? 'GET';
   if (Object.hasOwn(methods, method))
-    await methods[method as keyof typeof methods](req, res);
+  await methods[method as keyof typeof methods](req, res);
 }
 
 async function _get(req: NextApiRequest, res: NextApiResponse) {
+  res.status(500).send('Method does not exist for this route');
+}
+
+async function _post(req: NextApiRequest, res: NextApiResponse) {
 
   const { email, password } = req.body;
 
@@ -50,10 +54,6 @@ async function _get(req: NextApiRequest, res: NextApiResponse) {
 
   //200
   res.status(200).json({status: 200, token})
-}
-
-async function _post(req: NextApiRequest, res: NextApiResponse) {
-  res.status(500).send('Method does not exist for this route');
 }
 
 async function _put(req: NextApiRequest, res: NextApiResponse) {

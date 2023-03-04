@@ -22,7 +22,7 @@ export function LoginForm<T>({ api_endpoint, callback }: LoginParams) {
       });
 
     const response = await fetch(api_endpoint, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         "Content-Type": "application/json"
       },

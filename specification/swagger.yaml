@@ -17,7 +17,7 @@ tags:
 
 paths:
   /login:
-    get:
+    post:
       tags:
         - User
       requestBody:
