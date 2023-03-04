@@ -4,17 +4,17 @@ collections:
 
   User:
     handle:
-      type: String
+      type: string
       unique: true
       required: true
     screenname:
-      type: String
+      type: string
       required: true
     email:
-      type: String
+      type: string
       required: true
     password:
-      type: String
+      type: string
       required: true
 
   Newt:
@@ -23,25 +23,25 @@ collections:
       ref: true
       required: true
     timestamp:
-      type: String
+      type: string
       format: datetime
       required: true
     slug:
-      type: String
+      type: string
       unique: true
       required: true
     responseTo:
       type: Newt
       ref: true
     likes: 
-      type: Number
+      type: number
       default: 0
       required: true
     reported:
-      type: Boolean
+      type: boolean
       default: false
       required: true
     content:
-      type: String
+      type: string
       required: true
 

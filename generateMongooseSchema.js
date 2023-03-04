@@ -83,7 +83,7 @@ function generateSchemaProperties(properties) {
     return properties
         .map(property => `
 ${property.name}: {
-    type: ${property.ref ? 'Schema.Types.ObjectId' : property.type},
+    type: ${property.ref ? 'Schema.Types.ObjectId' : property.type.charAt(0).toUpperCase() + property.type.slice(1)},
     ${property.unique ? 'unique: true' : ''},
     ${property.required ? 'required: true' : ''},
     ${property.default != undefined ? `default: ${property.default}` : ''},
