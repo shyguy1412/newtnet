@@ -14,10 +14,12 @@
     "prebuild": "npm run build:mongo && npm run build:api && npm run config"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "18.14.4",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
+    "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "eslint": "8.35.0",
     "eslint-config-next": "13.2.3",
