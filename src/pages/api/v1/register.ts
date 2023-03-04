@@ -48,7 +48,7 @@ async function _post(req: NextApiRequest, res: NextApiResponse) {
 
   await User.create({
     email,
-    password: saltAndHashPassword(password),
+    password: await saltAndHashPassword(password),
     screenname,
     handle
   })
