@@ -37,6 +37,7 @@ function createSchemaFile(name, schema) {
     /// BEGIN TEMPLATE///
     return (
 /*ts*/`import { Model, model, models, Schema } from "mongoose"
+${generateReferencedImports(name, properties)}
 
 export interface I${name}{
 ${indent(generateInterfaceProperties(properties), 2)}
@@ -64,6 +65,13 @@ export const ${name} = ${name}Model;
 
 ///////// END GENERATE SCHEMA FILE ////////////
 
+function generateReferencedImports(name, properties){
+    return properties
+        .filter(property => property.type != name)
+        .map(property => property.ref?`import {I${property.type}} from './${property.type}'`:'')
+        .filter(line => line!='')
+        .join('\n');
+}
 
 function generateInterfaceProperties(properties) {
     return properties
