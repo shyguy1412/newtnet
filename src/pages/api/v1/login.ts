@@ -1,4 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { cookie } from '@/lib/cookie';
 import { createJWTFromUser, verifyPassword } from '@/lib/crypto';
 import { connectToDatabase } from '@/lib/mongo';
 import { User } from '@/lib/mongoose/User';
@@ -19,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   connectToDatabase();
   const method = req.method ?? 'GET';
   if (Object.hasOwn(methods, method))
-  await methods[method as keyof typeof methods](req, res);
+    await methods[method as keyof typeof methods](req, res);
 }
 
 async function _get(req: NextApiRequest, res: NextApiResponse) {
@@ -39,21 +40,33 @@ async function _post(req: NextApiRequest, res: NextApiResponse) {
   }
 
   const user = await User.findOne({ where: { email } }, {
-      email: true,
-      password: true,
-      screenname: true
-   });
+    email: true,
+    password: true,
+    screenname: true
+  });
 
   //401
   if (!user || !await verifyPassword(user, password)) {
-    res.status(401).json({ status: 401, err: 'Unauthorized'});
+    res.status(401).json({ status: 401, err: 'Unauthorized' });
     return;
   }
 
   const token = createJWTFromUser(user);
+  const expires = new Date();
+  expires.setFullYear(expires.getFullYear() + 1);
+
+  res.setHeader('Set-Cookie', cookie({
+    key: 'token',
+    value: token,
+    path: '/',
+    sameSite: 'Strict',
+    expires,
+    httpOnly: true,
+    secure: true
+  }));
 
   //200
-  res.status(200).json({status: 200, token})
+  res.status(200).json({ status: 200, token })
 }
 
 async function _put(req: NextApiRequest, res: NextApiResponse) {
