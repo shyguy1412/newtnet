@@ -10,7 +10,7 @@ interface Cookie {
   domain?: string
 }
 
-export function cookie(cookie: Cookie) {
+export function createCookieHeader(cookie: Cookie) {
   return `\
 ${cookie.key}=${cookie.value};\
 ${cookie.expires ? `Expires=${cookie.expires};` : ''}\
@@ -21,4 +21,14 @@ ${cookie.sameSite ? `SameSite=${cookie.sameSite};` : ''}\
 ${cookie.prefix ? `Prefix=${cookie.prefix};` : ''}\
 ${cookie.domain ? `Domain=${cookie.domain};` : ''}\
   `
+}
+
+export function readCookie(name: string) {
+  const cookie = document.cookie.match(new RegExp(`${name}=(.*);?`));
+  if (!cookie) return;
+  try {
+    return JSON.parse(cookie[1]);
+  } catch (_) {
+    return cookie[1];
+  }
 }

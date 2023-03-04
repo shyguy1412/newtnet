@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { cookie } from '@/lib/cookie';
+import { createCookieHeader as cookie } from '@/lib/cookie';
 import { createJWTFromUser, verifyPassword } from '@/lib/crypto';
 import { connectToDatabase } from '@/lib/mongo';
 import { User } from '@/lib/mongoose/User';
@@ -42,7 +42,8 @@ async function _post(req: NextApiRequest, res: NextApiResponse) {
   const user = await User.findOne({ where: { email } }, {
     email: true,
     password: true,
-    screenname: true
+    screenname: true,
+    handle: true
   });
 
   //401
@@ -55,6 +56,7 @@ async function _post(req: NextApiRequest, res: NextApiResponse) {
   const expires = new Date();
   expires.setFullYear(expires.getFullYear() + 1);
 
+  //Save JWT in cookie
   res.setHeader('Set-Cookie', cookie({
     key: 'token',
     value: token,
@@ -62,6 +64,19 @@ async function _post(req: NextApiRequest, res: NextApiResponse) {
     sameSite: 'Strict',
     expires,
     httpOnly: true,
+    secure: true
+  }));
+
+  //Save userdata in cookie
+  res.setHeader('Set-Cookie', cookie({
+    key: 'newt_user',
+    value: JSON.stringify({
+      handle: user.handle,
+      screenname: user.screenname
+    }),
+    path: '/',
+    sameSite: 'Strict',
+    expires,
     secure: true
   }));
 

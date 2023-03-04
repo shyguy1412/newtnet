@@ -1,12 +1,13 @@
 import { FormEvent } from "react";
+import { TypeParameter } from "typescript";
 import styles from './LoginForm.module.css'
 
 interface LoginParams {
   api_endpoint: string,
-  callback<T>(data: T): void
+  onLogin(data: any): void
 }
 
-export function LoginForm<T>({ api_endpoint, callback }: LoginParams) {
+export function LoginForm({ api_endpoint, onLogin }: LoginParams) {
 
   async function submitForm(e: FormEvent<HTMLFormElement>) {
     const form = e.currentTarget;
@@ -29,13 +30,13 @@ export function LoginForm<T>({ api_endpoint, callback }: LoginParams) {
       body: JSON.stringify(formData)
     })
 
-    if(!response.ok){
+    if (!response.ok) {
       //ERROR
       return;
     }
 
-    const data = await response.json() as T;
-    callback(data);
+    const data = await response.json();
+    onLogin(data);
   }
 
   return <>

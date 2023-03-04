@@ -3,19 +3,43 @@ import styles from '@/styles/Login.module.css'
 import { LoginForm } from '@/components/LoginForm'
 import path from 'path'
 import { api_prefix } from '@/config'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { LoginGet200Response } from '@/lib/api_client'
+import { readCookie } from '@/lib/cookie'
 
 type Props = ReturnType<typeof getStaticProps>['props'];
 
 export function getStaticProps() {
   return {
-    props:{
+    props: {
       api_endpoint: path.join(api_prefix, 'login')
     }
   }
 }
 
-export default function Login({api_endpoint}:Props) {
+export default function Login({ api_endpoint }: Props) {
 
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    const token = readCookie('newt_user')
+
+    console.log(token);
+    
+
+    if (token) {
+      router.push('/');
+      return;
+    };
+
+  }, [router]);
+
+  function onLogin(token:LoginGet200Response){
+    router.push('/')
+  }
 
   return (
     <>
@@ -27,9 +51,9 @@ export default function Login({api_endpoint}:Props) {
       </Head>
       <main className={styles.main}>
         <LoginForm
-         api_endpoint={api_endpoint}
-         callback={(data) => console.log(data)}
-         ></LoginForm>
+          api_endpoint={api_endpoint}
+          onLogin={onLogin}
+        ></LoginForm>
       </main>
     </>
   )
