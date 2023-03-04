@@ -38,3 +38,4 @@ next-env.d.ts
 # auto-generated
 mongoose
 api_client
+config.ts

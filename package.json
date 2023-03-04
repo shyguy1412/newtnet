@@ -9,16 +9,19 @@
     "build:api": "openapi-generator-cli generate -g typescript-fetch -i specification/swagger.yaml -o src/lib/api_client",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "npm run build:mongo && npm run build:api",
-    "prebuild": "npm run build:mongo && npm run build:api"
+    "config": "node ./generateConfig.js",
+    "postinstall": "npm run build:mongo && npm run build:api && npm run config",
+    "prebuild": "npm run build:mongo && npm run build:api && npm run config"
   },
   "dependencies": {
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "18.14.4",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
     "dotenv": "^16.0.3",
     "eslint": "8.35.0",
     "eslint-config-next": "13.2.3",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.0",
     "next": "13.2.3",
     "normalize.css": "^8.0.1",
