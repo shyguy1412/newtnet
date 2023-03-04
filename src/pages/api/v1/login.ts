@@ -45,8 +45,8 @@ async function _post(req: NextApiRequest, res: NextApiResponse) {
    });
 
   //401
-  if (!user || await verifyPassword(user, password)) {
-    res.status(401).json({ status: 401, err: 'Unauthorized' });
+  if (!user || !await verifyPassword(user, password)) {
+    res.status(401).json({ status: 401, err: 'Unauthorized'});
     return;
   }
 

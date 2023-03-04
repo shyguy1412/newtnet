@@ -14,7 +14,7 @@ export function getStaticProps() {
   }
 }
 
-export default function Home({api_endpoint}:Props) {
+export default function Login({api_endpoint}:Props) {
 
 
   return (
