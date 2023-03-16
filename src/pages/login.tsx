@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import styles from '@/styles/Login.module.css'
-import { LoginForm } from '@/components/LoginForm'
+import { ReactForm } from '@/components/ReactForm'
 import path from 'path'
 import { api_prefix } from '@/config'
 import { useRouter } from 'next/router'
@@ -25,19 +25,19 @@ export default function Login({ api_endpoint }: Props) {
   useEffect(() => {
     if (!router.isReady) return;
 
-    const token = readCookie('newt_user')
+    // const token = readCookie('newt_user')
 
-    console.log(token);
-    
+    // console.log(token);
 
-    if (token) {
-      router.push('/');
-      return;
-    };
+
+    // if (token) {
+    //   router.push('/');
+    //   return;
+    // };
 
   }, [router]);
 
-  function onLogin(token:LoginGet200Response){
+  function onLogin(token: LoginGet200Response) {
     router.push('/')
   }
 
@@ -48,10 +48,15 @@ export default function Login({ api_endpoint }: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className={styles.main}>
-        <LoginForm
-          api_endpoint={api_endpoint}
-          onLogin={onLogin}
-        ></LoginForm>
+        <ReactForm
+          method='POST'
+          target={api_endpoint}
+          onSuccess={onLogin}
+        >
+          <input type="text" name="email" placeholder="E-Mail" />
+          <input type="password" name="password" placeholder="Password" />
+          <button>Login</button>
+        </ReactForm>
       </main>
     </>
   )
